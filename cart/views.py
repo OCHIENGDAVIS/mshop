@@ -3,7 +3,7 @@ from django.views.decorators.http import require_POST
 
 from .forms import CartAddProductForm
 from .cart import Cart
-from shop.models import Product
+from mshop.models import Product
 
 
 @require_POST

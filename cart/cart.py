@@ -2,7 +2,7 @@ from decimal import Decimal
 
 from django.conf import settings
 
-from shop.models import Product
+from mshop.models import Product
 
 
 class Cart:
@@ -54,7 +54,14 @@ class Cart:
         return sum([item['quantity'] for item in self.cart.values()])
 
     def get_total_price(self):
-        return sum(Decimal(item['price'] * item['quantity']) for item in self.cart.values())
+        products = list(self.cart.values())
+        total = 0
+        for prod in products:
+            qty = prod['quantity']
+            price = prod['price']
+            sub_total = Decimal(qty) * Decimal(price)
+            total += sub_total
+        return total
 
     def empty_cart(self):
         self.cart.clear()
