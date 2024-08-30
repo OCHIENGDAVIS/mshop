@@ -142,3 +142,5 @@ STRIPE_API_VERSION = env('STRIPE_API_VERSION')
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+STRIPE_WEBHOOK_SECRET = env('STRIPE_WEBHOOK_SECRET')
