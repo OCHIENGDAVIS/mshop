@@ -4,20 +4,10 @@ import datetime
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 from django.http import HttpResponse
+from django.shortcuts import reverse
+from django.utils.safestring import mark_safe
 
 from .models import Order, OrderItem
-
-
-# @TODO add this to the tohe list display of order in the admin
-# def order_payment(obj):
-#     url = obj.get_stripe_url()
-#     if obj.stripe_id:
-#         html = f'<a href="{url}">{obj.stripe_id}</a>'
-#         return mark_safe(html)
-#     return ''
-#
-#
-# order_payment.short_description = 'Stripe payment'
 
 
 def export_to_csv(modeladmin, request, queryset):
@@ -49,9 +39,27 @@ class OrderItemInline(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['id', 'first_name', 'last_name', 'email', 'address', 'postal_code', 'city', 'paid',
-                    'created',
-                    'updated']
+    list_display = ['id', 'first_name', 'last_name', 'email', 'address', 'postal_code', 'city', 'paid', 'order_payment',
+                    'created', 'updated', 'order_pdf']
     list_filter = ['paid', 'created', 'updated']
     inlines = [OrderItemInline]
     actions = [export_to_csv]
+
+    def order_detail(self, obj):
+        url = reverse('orders:admin_order_detail', args=[obj.id])
+        return mark_safe(f'<a href="{url}">View </a>')
+
+    def order_payment(self, obj):
+        url = obj.get_stripe_url()
+        if obj.stripe_id:
+            html = f'<a href="{url}">{obj.stripe_id}</a>'
+            return mark_safe(html)
+        return ''
+
+    order_payment.short_description = 'Stripe payment'
+
+    def order_pdf(self, obj):
+        url = reverse('orders:admin_order_pdf', args=[obj.id])
+        return mark_safe(f'<a href="{url}">pdf</a>')
+
+    order_pdf.short_description = 'Invoice'
