@@ -16,7 +16,13 @@
                 </li>
             {% endfor %}
         </ul>
-        <p>Total: ${{ cart.get_total_price }}</p>
+        {% if cart.coupon %}
+            <li>
+                "{{ cart.coupon.code }}" {{ cart.coupon.discount }}% off
+                <span class="nef">${{ cart.get_discount|floatformat:2 }}</span>
+            </li>
+        {% endif %}
+        <p>Total: ${{ cart.get_total_price_after_discount|floatformat:2 }}</p>
     </div>
     <form method="POST"> {% csrf_token %}
         {{ form.as_p }}
