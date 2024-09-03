@@ -2,4 +2,5 @@
 env/
 __pycache__/
 .idea/
- static_root/admin/
+static/admin/*
+static_root/admin/*
